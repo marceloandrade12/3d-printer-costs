@@ -31,23 +31,6 @@ export function CostSettingsPanel() {
           step={0.1}
           endAdornment="€/kg"
         />
-        <NumberField
-          label="Custos adicionais padrão (€ / peça)"
-          value={settings.extraCostPerPiece}
-          onChange={(value) => setSetting('extraCostPerPiece', value)}
-          min={0}
-          step={0.01}
-          endAdornment="€"
-        />
-        <NumberField
-          label="Margem / acréscimo pretendido (%)"
-          value={settings.profitMarkupPercent}
-          onChange={(value) => setSetting('profitMarkupPercent', value)}
-          min={0}
-          step={1}
-          endAdornment="%"
-          helperText="Acréscimo sobre o custo, não margem sobre o preço final."
-        />
         <Typography
           component="button"
           onClick={resetSettings}
@@ -65,7 +48,7 @@ export function CostSettingsPanel() {
           Repor valores predefinidos
         </Typography>
         <Typography variant="caption" color="text.secondary">
-          Predefinidos: máquina {DEFAULT_SETTINGS.machineCostPerHour.toFixed(2)} €/h · filamento {DEFAULT_SETTINGS.filamentPricePerKg.toFixed(2)} €/kg · extras {DEFAULT_SETTINGS.extraCostPerPiece.toFixed(2)} € · acréscimo {DEFAULT_SETTINGS.profitMarkupPercent}%
+          Predefinidos: máquina {DEFAULT_SETTINGS.machineCostPerHour.toFixed(2)} €/h · filamento {DEFAULT_SETTINGS.filamentPricePerKg.toFixed(2)} €/kg
         </Typography>
       </Stack>
     </SectionCard>

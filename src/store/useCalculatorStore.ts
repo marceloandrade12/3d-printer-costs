@@ -3,18 +3,17 @@ import { persist } from 'zustand/middleware';
 import type { CostSettings, PrintData, ThemeMode } from '../types/calculator';
 
 export const DEFAULT_SETTINGS: CostSettings = {
-  machineCostPerHour: 1,
+  machineCostPerHour: 0.30,
   filamentPricePerKg: 20,
-  extraCostPerPiece: 0.1,
   profitMarkupPercent: 30,
 };
 
 export const DEFAULT_PRINT: PrintData = {
   quantity: 1,
   filamentGramsPerPiece: 25,
-  hours: 1,
+  hours: 0,
   minutes: 30,
-  extraCostPerPiece: 0.1,
+  extraCostPerPiece: 0,
 };
 
 interface CalculatorState {

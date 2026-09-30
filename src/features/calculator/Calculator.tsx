@@ -1,12 +1,14 @@
-import { Alert, Box, Container, Grid, Stack, Typography } from '@mui/material';
+import { Alert, Box, Container, Grid, Portal, Stack, Typography, useMediaQuery, useTheme } from '@mui/material';
+import { useCalculatorStore } from '../../store/useCalculatorStore';
+import { calculateResult } from '../../utils/calculations';
 import { CostSettingsPanel } from './CostSettingsPanel';
 import { PrintInputPanel } from './PrintInputPanel';
 import { ResultsPanel } from './ResultsPanel';
 import { SalePanel } from './SalePanel';
-import { useCalculatorStore } from '../../store/useCalculatorStore';
-import { calculateResult } from '../../utils/calculations';
 
 export function Calculator() {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const settings = useCalculatorStore((state) => state.settings);
   const print = useCalculatorStore((state) => state.print);
   const saleEnabled = useCalculatorStore((state) => state.saleEnabled);
@@ -16,8 +18,6 @@ export function Calculator() {
     settings.machineCostPerHour < 0 ||
     !Number.isFinite(settings.filamentPricePerKg) ||
     settings.filamentPricePerKg < 0 ||
-    !Number.isFinite(settings.extraCostPerPiece) ||
-    settings.extraCostPerPiece < 0 ||
     !Number.isFinite(settings.profitMarkupPercent) ||
     settings.profitMarkupPercent < 0 ||
     !Number.isFinite(print.quantity) ||
@@ -37,7 +37,6 @@ export function Calculator() {
         {
           machineCostPerHour: 0,
           filamentPricePerKg: 0,
-          extraCostPerPiece: 0,
           profitMarkupPercent: 0,
         },
         { quantity: 1, filamentGramsPerPiece: 0, hours: 0, minutes: 0, extraCostPerPiece: 0 },
@@ -45,7 +44,14 @@ export function Calculator() {
     : calculateResult(settings, print);
 
   return (
-    <Box component="main" sx={{ minHeight: '100vh', py: { xs: 2, sm: 4, md: 6 } }}>
+    <Box
+      component="main"
+      sx={{
+        minHeight: '100vh',
+        py: { xs: 2, sm: 4, md: 6 },
+        pb: { xs: 'calc(64px + env(safe-area-inset-bottom))', sm: 4, md: 6 },
+      }}
+    >
       <Container maxWidth="lg">
         <Stack spacing={{ xs: 2.5, md: 3.5 }}>
           <Box>
@@ -71,14 +77,33 @@ export function Calculator() {
                 <SalePanel />
               </Stack>
             </Grid>
-            <Grid size={{ xs: 12, md: 5 }}>
-              <Box sx={{ position: { md: 'sticky' }, top: { md: 24 } }}>
+            <Grid size={{ xs: 12, md: 5 }} sx={{ display: { xs: 'none', md: 'block' } }}>
+              <Box sx={{ position: 'sticky', top: 24 }}>
                 <ResultsPanel result={result} saleEnabled={saleEnabled && !isInvalid} />
               </Box>
             </Grid>
           </Grid>
         </Stack>
       </Container>
+      {isMobile ? (
+        <Portal>
+          <Box
+            sx={{
+              position: 'fixed',
+              left: 0,
+              right: 0,
+              bottom: 0,
+              zIndex: theme.zIndex.modal,
+              maxHeight: '55dvh',
+              overflowY: 'auto',
+              bgcolor: '#17132f',
+              isolation: 'isolate',
+            }}
+          >
+            <ResultsPanel result={result} saleEnabled={saleEnabled && !isInvalid} />
+          </Box>
+        </Portal>
+      ) : null}
     </Box>
   );
 }

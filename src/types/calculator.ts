@@ -1,7 +1,6 @@
 export interface CostSettings {
   machineCostPerHour: number;
   filamentPricePerKg: number;
-  extraCostPerPiece: number;
   profitMarkupPercent: number;
 }
 
